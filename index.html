@@ -2,93 +2,84 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Click</title>
+<title>Click Canvas</title>
 <style>
   body {
     margin: 0;
     height: 100vh;
     background: linear-gradient(135deg, #ffffff, #f8f8f8);
     overflow: hidden;
-    position: relative;
     cursor: pointer;
-    font-family: sans-serif;
   }
-  .sticker {
+  canvas {
+    display: block;
+  }
+  .photo, .message {
     position: absolute;
-    width: 12vw; /* responsive boyut */
-    max-width: 80px;
-    height: auto;
-    transform: translate(-50%, -50%);
-    opacity: 0.9;
-    transition: transform 0.2s;
-  }
-  .sticker:hover {
-    transform: translate(-50%, -50%) scale(1.1);
-  }
-  .photo {
-    position: absolute;
-    width: 80vw;
-    max-width: 250px;
-    height: auto;
-    transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
-    display: none;
+    transform: translate(-50%, -50%);
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.35);
     opacity: 0;
     transition: opacity 0.5s;
-    z-index: 9999;
+  }
+  .photo {
+    max-width: 80vw;
+    display: none;
+    z-index: 10;
   }
   .message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     font-size: 36px;
     color: #ff3366;
     font-weight: bold;
     display: none;
-    opacity: 0;
-    z-index: 10000;
-    transition: opacity 0.5s;
+    z-index: 11;
   }
 </style>
 </head>
 <body>
 
+<canvas id="canvas"></canvas>
 <img id="photo" class="photo" src="" alt="Biz">
 <div id="message" class="message">Sana çok aşığım bitanemm</div>
 
 <script>
-let clickCount = 0;
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
 const photo = document.getElementById('photo');
 const message = document.getElementById('message');
-const maxStickers = 50;
-const stickers = [];
 
 const photos = [
   "1.jpeg","2.jpeg","3.jpeg","4.jpeg","5.jpeg","6.jpeg","7.jpeg",
   "8.jpeg","9.jpeg","10.jpeg","11.jpeg","12.jpeg","13.jpeg","14.jpeg"
 ];
 
-document.body.addEventListener('click', (e) => {
+const stickerImg = new Image();
+stickerImg.src = 'IMG_4383.webp';
+
+let clickCount = 0;
+let stickers = []; // canvas üzerindeki sticker koordinatları
+
+function drawStickers() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let s of stickers) {
+    ctx.globalAlpha = 0.9;
+    ctx.drawImage(stickerImg, s.x - 40, s.y - 40, 80, 80);
+  }
+  ctx.globalAlpha = 1;
+}
+
+canvas.addEventListener('click', (e) => {
   clickCount++;
 
-  // Sticker oluştur
-  const sticker = document.createElement('img');
-  sticker.src = 'IMG_4383.webp';
-  sticker.className = 'sticker';
-  sticker.style.left = e.clientX + 'px';
-  sticker.style.top = e.clientY + 'px';
-  document.body.appendChild(sticker);
-  stickers.push(sticker);
-
-  // Sticker sayısını sınırla
-  if(stickers.length > maxStickers){
-    const oldSticker = stickers.shift();
-    document.body.removeChild(oldSticker);
-  }
+  // Sticker koordinat ekle
+  stickers.push({x: e.clientX, y: e.clientY});
+  if (stickers.length > 50) stickers.shift(); // max 50 sticker
+  drawStickers();
 
   // 5 ve katlarında fotoğraf göster
   if (clickCount % 5 === 0) {
@@ -103,7 +94,7 @@ document.body.addEventListener('click', (e) => {
     }, 1000);
   }
 
-  // 50'nin katlarında mesaj göster
+  // 50 ve katlarında mesaj göster
   if (clickCount % 50 === 0) {
     message.style.opacity = 0;
     message.style.display = 'block';
@@ -113,6 +104,129 @@ document.body.addEventListener('click', (e) => {
       setTimeout(() => { message.style.display = 'none'; }, 500);
     }, 1500);
   }
+});
+
+// resize olursa canvas boyutunu güncelle
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  drawStickers();
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Click Canvas</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffffff, #f8f8f8);
+    overflow: hidden;
+    cursor: pointer;
+  }
+  canvas {
+    display: block;
+  }
+  .photo, .message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .photo {
+    max-width: 80vw;
+    display: none;
+    z-index: 10;
+  }
+  .message {
+    font-size: 36px;
+    color: #ff3366;
+    font-weight: bold;
+    display: none;
+    z-index: 11;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<img id="photo" class="photo" src="" alt="Biz">
+<div id="message" class="message">Sana çok aşığım bitanemm</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const photo = document.getElementById('photo');
+const message = document.getElementById('message');
+
+const photos = [
+  "1.jpeg","2.jpeg","3.jpeg","4.jpeg","5.jpeg","6.jpeg","7.jpeg",
+  "8.jpeg","9.jpeg","10.jpeg","11.jpeg","12.jpeg","13.jpeg","14.jpeg"
+];
+
+const stickerImg = new Image();
+stickerImg.src = 'IMG_4383.webp';
+
+let clickCount = 0;
+let stickers = []; // canvas üzerindeki sticker koordinatları
+
+function drawStickers() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let s of stickers) {
+    ctx.globalAlpha = 0.9;
+    ctx.drawImage(stickerImg, s.x - 40, s.y - 40, 80, 80);
+  }
+  ctx.globalAlpha = 1;
+}
+
+canvas.addEventListener('click', (e) => {
+  clickCount++;
+
+  // Sticker koordinat ekle
+  stickers.push({x: e.clientX, y: e.clientY});
+  if (stickers.length > 50) stickers.shift(); // max 50 sticker
+  drawStickers();
+
+  // 5 ve katlarında fotoğraf göster
+  if (clickCount % 5 === 0) {
+    const randomIndex = Math.floor(Math.random() * photos.length);
+    photo.src = photos[randomIndex];
+    photo.style.opacity = 0;
+    photo.style.display = 'block';
+    setTimeout(() => { photo.style.opacity = 1; }, 50);
+    setTimeout(() => {
+      photo.style.opacity = 0;
+      setTimeout(() => { photo.style.display = 'none'; }, 500);
+    }, 1000);
+  }
+
+  // 50 ve katlarında mesaj göster
+  if (clickCount % 50 === 0) {
+    message.style.opacity = 0;
+    message.style.display = 'block';
+    setTimeout(() => { message.style.opacity = 1; }, 50);
+    setTimeout(() => {
+      message.style.opacity = 0;
+      setTimeout(() => { message.style.display = 'none'; }, 500);
+    }, 1500);
+  }
+});
+
+// resize olursa canvas boyutunu güncelle
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  drawStickers();
 });
 </script>
 </body>
