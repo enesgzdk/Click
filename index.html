@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Ceyda Sticker Surprise</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffffff, #f8f8f8);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    font-family: sans-serif;
+  }
+  .sticker {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    transform: translate(-50%, -50%);
+    opacity: 0.9;
+    transition: transform 0.2s;
+  }
+  .sticker:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  .photo {
+    position: absolute;
+    width: 250px;
+    height: auto;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    display: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 9999;
+  }
+  .message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    color: #ff3366;
+    font-weight: bold;
+    display: none;
+    opacity: 0;
+    z-index: 10000;
+    transition: opacity 0.5s;
+  }
+</style>
+</head>
+<body>
+
+<img id="photo" class="photo" src="" alt="Biz">
+<div id="message" class="message">Sana çok aşığım bitanemm</div>
+
+<script>
+let clickCount = 0;
+const photo = document.getElementById('photo');
+const message = document.getElementById('message');
+
+const photos = [
+  "https://uploads.onecompiler.io/43t6rbp3k/43t6r7akr/IMG_4156.jpeg",
+  "https://uploads.onecompiler.io/43t6rbp3k/43t6r7akr/52c4d4f1-64f0-41f2-818f-feccf2307e42.jpeg",
+  "https://via.placeholder.com/250x250?text=3",
+  "https://via.placeholder.com/250x250?text=4",
+  "https://via.placeholder.com/250x250?text=5",
+  "https://via.placeholder.com/250x250?text=6",
+  "https://via.placeholder.com/250x250?text=7",
+  "https://via.placeholder.com/250x250?text=8",
+  "https://via.placeholder.com/250x250?text=9",
+  "https://via.placeholder.com/250x250?text=10",
+  "https://via.placeholder.com/250x250?text=11",
+  "https://via.placeholder.com/250x250?text=12",
+  "https://via.placeholder.com/250x250?text=13",
+  "https://via.placeholder.com/250x250?text=14",
+  "https://via.placeholder.com/250x250?text=15"
+];
+
+document.body.addEventListener('click', (e) => {
+  clickCount++;
+
+  // Sticker oluştur
+  const sticker = document.createElement('img');
+  sticker.src = 'https://uploads.onecompiler.io/43t6rbp3k/43uvmj5t7/IMG_4383.webp';
+  sticker.className = 'sticker';
+  sticker.style.left = e.clientX + 'px';
+  sticker.style.top = e.clientY + 'px';
+  document.body.appendChild(sticker);
+
+  // 5 ve katlarında fotoğraf göster
+  if (clickCount % 5 === 0) {
+    const randomIndex = Math.floor(Math.random() * photos.length);
+    photo.src = photos[randomIndex];
+    photo.style.opacity = 0;
+    photo.style.display = 'block';
+    setTimeout(() => { photo.style.opacity = 1; }, 50);
+    setTimeout(() => {
+      photo.style.opacity = 0;
+      setTimeout(() => { photo.style.display = 'none'; }, 500);
+    }, 1000);
+  }
+
+  // 50'nin katlarında mesaj göster
+  if (clickCount % 50 === 0) {
+    message.style.opacity = 0;
+    message.style.display = 'block';
+    setTimeout(() => { message.style.opacity = 1; }, 50);
+    setTimeout(() => {
+      message.style.opacity = 0;
+      setTimeout(() => { message.style.display = 'none'; }, 500);
+    }, 1500);
+  }
+});
+</script>
+</body>
+</html>
