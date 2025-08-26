@@ -15,8 +15,9 @@
   }
   .sticker {
     position: absolute;
-    width: 80px;
-    height: 80px;
+    width: 12vw; /* responsive boyut */
+    max-width: 80px;
+    height: auto;
     transform: translate(-50%, -50%);
     opacity: 0.9;
     transition: transform 0.2s;
@@ -26,7 +27,8 @@
   }
   .photo {
     position: absolute;
-    width: 250px;
+    width: 80vw;
+    max-width: 250px;
     height: auto;
     transform: translate(-50%, -50%);
     top: 50%;
@@ -62,24 +64,12 @@
 let clickCount = 0;
 const photo = document.getElementById('photo');
 const message = document.getElementById('message');
+const maxStickers = 50;
+const stickers = [];
 
 const photos = [
-  "1.jpeg",
-  "2.jpeg",
-  "3.jpeg",
-  "4.jpeg",
-  "5.jpeg",
-  "6.jpeg",
-  "7.jpeg",
-  "8.jpeg",
-  "9.jpeg",
-  "10.jpeg",
-  "11.jpeg",
-  "12.jpeg",
-  "13.jpeg",
-  "14.jpeg",
-
-  
+  "1.jpeg","2.jpeg","3.jpeg","4.jpeg","5.jpeg","6.jpeg","7.jpeg",
+  "8.jpeg","9.jpeg","10.jpeg","11.jpeg","12.jpeg","13.jpeg","14.jpeg"
 ];
 
 document.body.addEventListener('click', (e) => {
@@ -92,6 +82,13 @@ document.body.addEventListener('click', (e) => {
   sticker.style.left = e.clientX + 'px';
   sticker.style.top = e.clientY + 'px';
   document.body.appendChild(sticker);
+  stickers.push(sticker);
+
+  // Sticker sayısını sınırla
+  if(stickers.length > maxStickers){
+    const oldSticker = stickers.shift();
+    document.body.removeChild(oldSticker);
+  }
 
   // 5 ve katlarında fotoğraf göster
   if (clickCount % 5 === 0) {
